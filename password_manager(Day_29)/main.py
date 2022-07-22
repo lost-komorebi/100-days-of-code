@@ -1,8 +1,10 @@
+import os
 from tkinter import *
 from tkinter import messagebox
 import string
 import random
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -34,15 +36,29 @@ def write_file():
             message=f'Do you want to save these datas?\n email/user_name: {eu}\n password: {password}')
 
         if is_ok:
-            # 清空输入框并设定默认值
-            w_entry.delete(0, END)
-            eu_entry.delete(0, END)
-            eu_entry.insert(0, 'test@test.com')
-            pass_entry.delete(0, END)
-            data = website + ' | ' + eu + ' | ' + password + '\n'
+            new_data = {
+                website: {
+                    'eu': eu,
+                    'password': password
+                }
+            }
 
-            with open('pass.txt', 'a') as f:
-                f.write(data)
+            try:
+                with open('data.json', 'r') as f:  # 读取历史数据
+                    data = json.load(f)
+            except FileNotFoundError:  # 若文件不存在则将本次数据保存
+                with open('data.json', 'w') as f:
+                    json.dump(new_data, f, indent=4)
+            else:
+                data.update(new_data)  # 合并历史数据和本次数据
+                with open('data.json', 'w') as f:  # 保存
+                    json.dump(data, f, indent=4)
+            finally:
+                # 清空输入框并设定默认值
+                w_entry.delete(0, END)
+                eu_entry.delete(0, END)
+                eu_entry.insert(0, 'test@test.com')
+                pass_entry.delete(0, END)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
