@@ -1,10 +1,33 @@
-import os
 from tkinter import *
 from tkinter import messagebox
 import string
 import random
 import pyperclip
 import json
+# ---------------------------- PASSWORD SEARCH ------------------------------- #
+
+
+def search():
+    website = w_entry.get()
+    if len(website) == 0:
+        messagebox.showerror(title='error', message='Website cannot be empty')
+    else:
+        try:
+            with open('data.json', 'r') as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            messagebox.showerror(message='No Data File found')
+        else:
+            info = data.get(website)
+            if info:
+                messagebox.showinfo(
+                    title='password',
+                    message=f"Email/Username: {data[website]['eu']}\n password: {data[website]['password']}")
+            else:
+                messagebox.showinfo(
+                    message=f'cannot find information for this website{website}')
+
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -83,23 +106,26 @@ pass_label = Label(text='Password:')
 pass_label.grid(column=0, row=3)
 
 # Entries
-w_entry = Entry(width=35)
-w_entry.grid(column=1, row=1, columnspan=2)  # columnspan列长度
+w_entry = Entry(width=18)
+w_entry.grid(column=1, row=1)
 w_entry.focus()  # 让光标默认在此输入框
 
 eu_entry = Entry(width=35)
-eu_entry.grid(column=1, row=2, columnspan=2)
+eu_entry.grid(column=1, row=2, columnspan=2)  # columnspan列长度
 eu_entry.insert(0, 'test@test.com')  # 默认值设定，0指输入框最左边
 
-pass_entry = Entry(width=21)
+pass_entry = Entry(width=18)
 pass_entry.grid(column=1, row=3)
 
 # Buttons
 gp_button = Button(text='Generate Password', command=password_generator)
 gp_button.grid(column=2, row=3)
 
-add_button = Button(text='Add', width=36, command=write_file)
+add_button = Button(text='Add', width=34, command=write_file)
 add_button.grid(column=1, row=4, columnspan=2)
+
+search_button = Button(text='Search', width=14, command=search)
+search_button.grid(column=2, row=1)
 
 
 window.mainloop()
