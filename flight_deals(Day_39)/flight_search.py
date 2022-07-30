@@ -41,7 +41,7 @@ class FlightSearch:
             "flight_type": "round",
             "curr": "GBP",
             "one_for_city": 1,
-            "max_stopovers": 0
+            "max_stopovers": 1
         }
 
         r = requests.get(
@@ -56,13 +56,31 @@ class FlightSearch:
             print(f'No qualified flight found: from LON to {to}')
             return None
         else:
-            flight_search_result = r.json()['data'][0]
-            flight_data = FlightData(
-                flight_search_result['price'],
-                flight_search_result['cityFrom'],
-                flight_search_result['flyFrom'],
-                flight_search_result['cityTo'],
-                flight_search_result['flyTo'],
-                flight_search_result['route'][0]['local_departure'].split('T')[0],
-                flight_search_result['route'][1]['local_departure'].split('T')[0])
-            return flight_data
+            result = r.json()['data'][0]
+            if len(result['route']) == 2:
+                flight_data = FlightData(
+                    result['price'],
+                    result['cityFrom'],
+                    result['flyFrom'],
+                    result['cityTo'],
+                    result['flyTo'],
+                    result['route'][0]['local_departure'].split('T')[0],
+                    result['route'][1]['local_departure'].split('T')[0],
+                    result['deep_link'])
+                return flight_data
+            else:
+                for i in result['route']:
+                    if i['cityCodeFrom'] != 'LON' and i['cityCodeFrom'] != to:
+                        via_city = i['cityFrom']
+                        flight_data = FlightData(
+                            result['price'],
+                            result['cityFrom'],
+                            result['flyFrom'],
+                            result['cityTo'],
+                            result['flyTo'],
+                            result['route'][0]['local_departure'].split('T')[0],
+                            result['route'][1]['local_departure'].split('T')[0],
+                            result['deep_link'],
+                            1,
+                            via_city)
+                        return flight_data

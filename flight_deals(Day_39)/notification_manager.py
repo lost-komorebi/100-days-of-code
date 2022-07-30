@@ -5,13 +5,13 @@ class NotificationManager:
     # This class is responsible for sending notifications with the deal flight
     # details.
 
-    def __init__(self, flight_date):
-        self.flight_date = flight_date
-        self.message = f'Low price alert!Only £{flight_date.price} to fly from ' \
-                       f'{flight_date.departure_city_name}-{flight_date.departure_airport_iata_code} to ' \
-                       f'{flight_date.arrival_city_name}-{flight_date.arrival_airport_iata_code}, from ' \
-                       f'{flight_date.outbound_date} to {flight_date.inbound_date}'
-        print(self.message)
+    def __init__(self, flight_data):
+        self.flight_data = flight_data
+        self.message = f'Low price alert!Only £{flight_data.price} to fly from ' \
+                       f'{flight_data.departure_city_name}-{flight_data.departure_airport_iata_code} to ' \
+                       f'{flight_data.arrival_city_name}-{flight_data.arrival_airport_iata_code}, from ' \
+                       f'{flight_data.outbound_date} to {flight_data.inbound_date}'
+        #print(self.message)
 
     def send(self):
 
