@@ -1,0 +1,20 @@
+/* tag selector */
+h1 {
+  background-color: green;
+  font-size: 50;
+  font-style: italic;
+}
+img:hover {
+  background-color: black;
+}
+/* clss selector */
+.bacon {
+  background-color: #CCD6A6;
+}
+.burger{
+  background-color: #F37878;
+}
+/* id selector */
+#heading {
+  background-color: red;
+}
