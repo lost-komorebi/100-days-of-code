@@ -15,15 +15,15 @@ class NotificationManager:
 
     def send(self):
 
-        account_sid = 'to_fill'
-        auth_token = 'to_fill'
+        account_sid = 'ACb3a5126676a80d57cd1e86ddd7492671'
+        auth_token = '0466b3b8fd96e4dc9f0b6aaf73725c8e'
         client = Client(account_sid, auth_token)
 
         message = client.messages \
             .create(
                 body=self.message,
-                from_='to_fill',
-                to='to_fill'
+                from_='+18434387898',
+                to='+840397757552'
             )
 
         print(message.sid)
