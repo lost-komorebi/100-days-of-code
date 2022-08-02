@@ -15,8 +15,8 @@ class NotificationManager:
 
     def send(self):
 
-        account_sid = 'ACb3a5126676a80d57cd1e86ddd7492671'
-        auth_token = '0466b3b8fd96e4dc9f0b6aaf73725c8e'
+        account_sid = 'to_fill'
+        auth_token = 'to_fill'
         client = Client(account_sid, auth_token)
 
         message = client.messages \
