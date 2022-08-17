@@ -1,0 +1,36 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title%}Library{% endblock title%}
+{% block content%}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+<h1>My Library</h1>
+<table class="table table-bordered table-striped table-responsive-lg">
+    <thead>
+    <tr>
+        <th>Book Name</th>
+        <th>Book Author</th>
+        <th>Rating</th>
+        <th class="opera-th">Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for book in all_books%}
+    <tr>
+
+        <td>{{book.title}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.rating}}/10</td>
+        <td>
+            <a class="btn btn-primary" href="{{ url_for('edit', book_id=book.id) }}">Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('delete', book_id=book.id) }}">Delete</a>
+
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a class="btn btn-primary" href="{{ url_for('add') }}">Add New Book</a>
+{% endblock content%}
