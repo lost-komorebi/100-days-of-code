@@ -49,48 +49,30 @@ class TicTacToe:
         self.player *= -1
 
     def get_user_input(self):
-        print(self.empty_coordinate)
         while self.status != 1:
-            if self.mode == 0:
-                if self.player == 1:
-                    print("Now is play1's(X) turn")
-                    user_input = input('Please enter(row,column, eg: 1,2):')
-                else:
+            if self.player == 1:
+                print("Now is play1's(X) turn")
+                user_input = input('Please enter(row,column, eg: 1,2):')
+            else:
+                if self.mode == 0:
                     print("Now is play2's(O) turn")
                     user_input = input('Please enter(row,column eg: 1,2):')
-                m = re.match(
-                    r'([1-3]),([1-3])',
-                    user_input)  # validate user_input
-                if m:
-                    if self.ttt[int(m.group(1)) -
-                                1][int(m.group(2)) -
-                                   1] in ('X', '0'):
-                        print('You can not mark this place!')
-                        self.get_user_input()
-                    self.update_ttt(int(m.group(1)) - 1, int(m.group(2)) - 1)
-                else:
-                    print('Invalid Input!')
-                    self.get_user_input()
-            else:
-                if self.player == 1:
-                    print("Now is play1's(X) turn")
-                    user_input = input('Please enter(row,column, eg: 1,2):')
                 else:
                     print("Now is play2's(O) turn(AI Mode)")
                     user_input = self.get_random_coordinate()
-                m = re.match(
-                    r'([1-3]),([1-3])',
-                    user_input)  # validate user_input
-                if m:
-                    if self.ttt[int(m.group(1)) -
-                                1][int(m.group(2)) -
-                                   1] in ('X', 'O'):
-                        print('You can not mark this place!')
-                        self.get_user_input()
-                    self.update_ttt(int(m.group(1)) - 1, int(m.group(2)) - 1)
-                else:
-                    print('Invalid Input!')
+            m = re.match(
+                r'([1-3]),([1-3])',
+                user_input)  # validate user_input
+            if m:
+                if self.ttt[int(m.group(1)) -
+                            1][int(m.group(2)) -
+                               1] in ('X', '0'):
+                    print('You can not mark this place!')
                     self.get_user_input()
+                self.update_ttt(int(m.group(1)) - 1, int(m.group(2)) - 1)
+            else:
+                print('Invalid Input!')
+                self.get_user_input()
         else:
             user_input = input("Enter 'yes' to start a new game, \n"
                                "Enter any other word to quit:")
