@@ -5,8 +5,9 @@ __author__ = 'komorebi'
 
 import tkinter as tk
 from tkinter import ttk, messagebox
-from tkinter.filedialog import askopenfilename
-from PIL import ImageTk, Image, ImageFont, ImageDraw, ImageGrab
+from tkinter.filedialog import askopenfilename, asksaveasfile
+from PIL import ImageTk, Image, ImageFont, ImageDraw
+import os
 
 
 class ImageWaterMark:
@@ -22,6 +23,7 @@ class ImageWaterMark:
         self.img = None
         self.img_copy = None
         self.image_on_canvas = None
+        self.add_wt_success = 0  # marks whether the watermark added successfully
 
         self.input_label = tk.Label(master, text='Watermark:')
         self.input_label.grid(column=0, row=2)
@@ -35,6 +37,10 @@ class ImageWaterMark:
             command=self.add_watermark)
         self.add_button.grid(column=2, row=2)
 
+        self.download_button = tk.Button(
+            master, text='Download', command=self.save)
+        self.download_button.grid(column=0, row=3)
+
     def upload(self):
         f_types = [('Jpg Files', '*.jpg'), ('Png Files', '*.png'),
                    ('Bmp Files', '*.bmp')]  # supported file
@@ -43,6 +49,7 @@ class ImageWaterMark:
         img = Image.open(filename)  # return an image object
         img_resized = img.resize((200, 200))  # resize img
         self.img_copy = img_resized.copy()
+        self.img_copy.filename = filename
         self.img = ImageTk.PhotoImage(img_resized)
         # the center of the img will locate at 100,100
         self.image_on_canvas = self.canvas.create_image(
@@ -71,10 +78,23 @@ class ImageWaterMark:
         font = ImageFont.truetype('Symbol.ttf', 20)  # set font
         draw = ImageDraw.Draw(self.img_copy)
         draw.text((10, 10), wt, (255, 255, 255), font=font)  # add watermark
-        self.img = ImageTk.PhotoImage(draw._image)  # _image get original_image
+        self.img = ImageTk.PhotoImage(self.img_copy)
         self.canvas.itemconfig(
             self.image_on_canvas,
             image=self.img)  # update canvas image
+        self.add_wt_success = 1
+
+    def save(self):
+        if self.add_wt_success == 1:
+            img_name_list = os.path.split(self.img_copy.filename)[1].split('.')
+            self.img_copy.filename = img_name_list[0] + \
+                '_wt.' + img_name_list[1]  # rename photo
+            file = asksaveasfile(initialfile=self.img_copy.filename)
+            self.img_copy.save(file.name)  # save img to path selected by user
+        else:
+            messagebox.showerror(
+                title='error',
+                message='Pleas add watermark first!')
 
 
 root = tk.Tk()
