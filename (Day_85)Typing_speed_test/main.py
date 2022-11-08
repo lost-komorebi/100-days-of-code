@@ -6,6 +6,7 @@ __author__ = 'komorebi'
 import tkinter as tk
 from tkinter import messagebox
 from random import choices
+import string
 
 
 class TyingSpeedTest:
@@ -19,37 +20,36 @@ class TyingSpeedTest:
         self.right_number = 0  # the correct number of user typing
 
         self.test_text = self.get_text()
-        print(self.test_text)
 
         self.cpm_label = tk.Label(text='Corrected CPM: ')
-        self.cpm_label.grid(column=0, row=0)
+        self.cpm_label.grid(column=0, row=0, pady=(20, 0))
 
         self.cpm_text = tk.Text(width=5, height=1)
         self.cpm_text.insert('1.0', '?')
         self.cpm_text.configure(state='disabled')
-        self.cpm_text.grid(column=1, row=0)
+        self.cpm_text.grid(column=1, row=0, pady=(20, 0))
 
         self.wpm_label = tk.Label(text='WPM: ')
-        self.wpm_label.grid(column=2, row=0)
+        self.wpm_label.grid(column=2, row=0, pady=(20, 0))
 
         self.wpm_text = tk.Text(width=5, height=1)
         self.wpm_text.insert('1.0', '?')
         self.wpm_text.configure(state='disabled')
-        self.wpm_text.grid(column=3, row=0)
+        self.wpm_text.grid(column=3, row=0, pady=(20, 0))
 
         self.tl_label = tk.Label(text='Time left: ')
-        self.tl_label.grid(column=4, row=0)
+        self.tl_label.grid(column=4, row=0, pady=(20, 0))
 
         self.tl_text = tk.Text(width=5, height=1)
         self.tl_text.insert('1.0', str(self.count))
         self.tl_text.configure(state='disabled')
-        self.tl_text.grid(column=5, row=0)
+        self.tl_text.grid(column=5, row=0, pady=(20, 0))
 
         self.restart_button = tk.Button(
             text='Restart', command=self.restart)
-        self.restart_button.grid(column=6, row=0)
+        self.restart_button.grid(column=6, row=0, pady=(20, 0))
 
-        self.text = tk.Text(font=('', 20), height=3, width=50, wrap='word')
+        self.text = tk.Text(font=('', 20), height=3, width=40, wrap='word')
         self.update_text()
         self.text.grid(column=0, row=1, columnspan=7, padx=30, pady=30)
 
@@ -65,16 +65,15 @@ class TyingSpeedTest:
         self.entry.focus_set()
         self.entry.grid(column=0, row=2, columnspan=7, pady=(0, 30))
 
-        self.bindings()
-        self.run()
+        self.al_bind()
+        self.update_bg_fg()
 
     def get_text(self):
         with open('word_list.txt', 'r') as f:
-            word_list = f.read().split('•')
-        return ' '.join(choices(word_list, k=18))
+            word_list = list(set(f.read().split('•')))
+        return ' '.join(choices(word_list, k=20))
 
     def count_down(self):
-        self.entry.unbind('<Key>')
         if self.count > -1:
             self.tl_text.configure(state='normal')
             self.tl_text.delete('1.0', tk.END)
@@ -83,15 +82,16 @@ class TyingSpeedTest:
             self.master.after(1000, self.count_down)
             self.count -= 1
         else:
-            number = self.cal_speed()
-            messagebox.showinfo(message=f'Your score: {number} WPM ')
+            messagebox.showinfo(
+                message=f'Your score: {self.right_number} WPM ')
 
     def cal_speed(self):
-        if self.test_text.split(' ')[
-                self.word_index].strip() == self.entry.get().strip():
+        user_input = self.entry.get().strip().lower()
+        words_outer = self.test_text.split(' ')[
+            self.word_index].strip().lower()
+        if user_input == words_outer:
             self.right_number += 1
-
-        return self.right_number
+        print(user_input, words_outer, self.right_number)
 
     def add_foreground(self, start, end):
         self.text.tag_add('fore', start, end)
@@ -113,8 +113,7 @@ class TyingSpeedTest:
         self.text.insert('1.0', self.test_text)
         self.text.configure(state='disabled')
 
-    def run(self):
-
+    def update_bg_fg(self):
         if self.word_index >= len(self.test_text.split(' ')):
             self.update_text()
         word = self.test_text.split(' ')[
@@ -131,16 +130,25 @@ class TyingSpeedTest:
     def reset_entry(self):
         self.entry.delete(0, 'end')
 
-    def bindings(self):
-        self.entry.bind('<Key>', lambda event: self.count_down())
-        self.entry.bind('<space>', lambda event: self.cal_speed(), add='+')
-        self.entry.bind('<space>', lambda event: self.update_index(), add='+')
-        self.entry.bind('<space>', lambda event: self.run(), add='+')
-        self.entry.bind('<space>', lambda event: self.reset_entry(), add='+')
+    def al_bind(self):
+        for i in string.ascii_letters:
+            self.entry.bind(str(i), lambda event: self.count_down(), add='+')
+            self.entry.bind(str(i), lambda event: self.al_unbind(), add='+')
+
+    def al_unbind(self):
+        """entry unbind string.ascii_letters"""
+        for i in string.ascii_letters:
+            self.entry.unbind(str(i))
+        self.entry.bind('<space>', lambda event: self.space_bind())
+
+    def space_bind(self):
+        self.cal_speed()
+        self.update_index()
+        self.update_bg_fg()
+        self.reset_entry()
 
     def update_index(self):
         self.word_index += 1
-        # print(self.word_index)
 
     def restart(self):
         pass
