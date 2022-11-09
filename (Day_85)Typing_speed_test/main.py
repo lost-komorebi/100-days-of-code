@@ -22,6 +22,7 @@ class TyingSpeedTest:
         self.bg_pos, self.fg_pos = '1.0', '1.0'
         self.words = self.get_text()
         self.timer = None
+        self.typing_status = 0
 
         self.wpm_label = tk.Label(text='WPM: ')
         self.wpm_label.grid(column=2, row=0, pady=(20, 0))
@@ -155,6 +156,10 @@ class TyingSpeedTest:
         for i in string.ascii_letters:
             self.entry.bind(str(i), lambda event: self.count_down(), add='+')
             self.entry.bind(str(i), lambda event: self.al_unbind(), add='+')
+            self.entry.bind(str(i), lambda event: self.update_typing_status(1), add='+')
+
+    def update_typing_status(self, number):
+        self.typing_status = number
 
     def al_unbind(self):
         """entry unbind string.ascii_letters"""
@@ -163,12 +168,19 @@ class TyingSpeedTest:
         self.entry.bind('<space>', lambda event: self.space_bind())
 
     def space_bind(self):
-        self.cal_speed()
-        self.update_index()
-        self.update_bg()
-        self.update_fg()
-        self.reset_entry()
-        self.update_wpm(self.right_number)
+        print(self.typing_status)
+        if self.typing_status == 1:
+            self.cal_speed()
+            self.update_index()
+            self.update_bg()
+            self.update_fg()
+            self.reset_entry()
+            self.update_typing_status(0)
+            self.update_wpm(self.right_number)
+        for i in string.ascii_letters:  # rebind keyboard events
+            self.entry.bind(str(i), lambda event: self.update_typing_status(1))
+
+
 
     def update_index(self):
         self.word_index += 1
