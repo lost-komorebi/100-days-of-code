@@ -23,14 +23,6 @@ class TyingSpeedTest:
 
         self.test_text = self.get_text()
 
-        self.cpm_label = tk.Label(text='Corrected CPM: ')
-        self.cpm_label.grid(column=0, row=0, pady=(20, 0))
-
-        self.cpm_text = tk.Text(width=5, height=1)
-        self.cpm_text.insert('1.0', '?')
-        self.cpm_text.configure(state='disabled')
-        self.cpm_text.grid(column=1, row=0, pady=(20, 0))
-
         self.wpm_label = tk.Label(text='WPM: ')
         self.wpm_label.grid(column=2, row=0, pady=(20, 0))
 
@@ -93,6 +85,13 @@ class TyingSpeedTest:
             self.word_index].strip().lower()
         if user_input == words_outer:
             self.right_number += 1
+
+    def update_wpm(self):
+        self.wpm_text.configure(state='normal')
+        self.wpm_text.delete('1.0', 'end')
+        self.wpm_text.insert('1.0', str(self.right_number))
+        self.wpm_text.configure(state='disabled')
+        self.wpm_text.grid(column=3, row=0, pady=(20, 0))
 
     def add_foreground(self, start, end):
         self.text.tag_add('fore', start, end)
@@ -167,6 +166,7 @@ class TyingSpeedTest:
         self.update_bg()
         self.update_fg()
         self.reset_entry()
+        self.update_wpm()
 
     def update_index(self):
         self.word_index += 1
