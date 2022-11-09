@@ -66,7 +66,7 @@ class TyingSpeedTest:
         self.entry.grid(column=0, row=2, columnspan=7, pady=(0, 30))
 
         self.al_bind()
-        self.update_bg_fg()
+        self.update_bg()
 
     def get_text(self):
         with open('word_list.txt', 'r') as f:
@@ -91,7 +91,7 @@ class TyingSpeedTest:
             self.word_index].strip().lower()
         if user_input == words_outer:
             self.right_number += 1
-        print(user_input, words_outer, self.right_number)
+        #print(user_input, words_outer, self.right_number)
 
     def add_foreground(self, start, end):
         self.text.tag_add('fore', start, end)
@@ -113,7 +113,8 @@ class TyingSpeedTest:
         self.text.insert('1.0', self.test_text)
         self.text.configure(state='disabled')
 
-    def update_bg_fg(self):
+    def update_bg(self):
+        """update background"""
         if self.word_index >= len(self.test_text.split(' ')):
             self.update_text()
         word = self.test_text.split(' ')[
@@ -126,6 +127,20 @@ class TyingSpeedTest:
             stopindex='end',
             count=count_var)
         self.add_background(pos, f"{pos} + {count_var.get()}c")
+
+    def update_fg(self):
+        """update foreground"""
+        user_input = self.entry.get().strip().lower()
+        if self.test_text.split(' ')[self.word_index - 1] == user_input:
+            word = self.test_text.split(' ')[
+                self.word_index - 1]
+            count_var = tk.StringVar()
+            pos = self.text.search(
+                word,
+                '1.0',
+                stopindex='end',
+                count=count_var)
+            self.add_foreground(pos, f"{pos} + {count_var.get()}c")
 
     def reset_entry(self):
         self.entry.delete(0, 'end')
@@ -144,7 +159,8 @@ class TyingSpeedTest:
     def space_bind(self):
         self.cal_speed()
         self.update_index()
-        self.update_bg_fg()
+        self.update_bg()
+        self.update_fg()
         self.reset_entry()
 
     def update_index(self):
