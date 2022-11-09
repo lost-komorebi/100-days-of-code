@@ -5,7 +5,7 @@ __author__ = 'komorebi'
 
 import tkinter as tk
 from tkinter import messagebox
-from random import choices
+from random import sample
 import string
 
 
@@ -70,8 +70,8 @@ class TyingSpeedTest:
 
     def get_text(self):
         with open('word_list.txt', 'r') as f:
-            word_list = list(set(f.read().split('•')))
-        return ' '.join(choices(word_list, k=20))
+            word_list = list(f.read().split('•'))
+        return ' '.join(sample(word_list, k=20))
 
     def count_down(self):
         if self.count > -1:
