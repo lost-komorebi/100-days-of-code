@@ -20,23 +20,21 @@ class TyingSpeedTest:
         self.right_number = 0  # the correct number of user typing
         # record last post of background and foreground
         self.bg_pos, self.fg_pos = '1.0', '1.0'
-
-        self.test_text = self.get_text()
+        self.words = self.get_text()
+        self.timer = None
 
         self.wpm_label = tk.Label(text='WPM: ')
         self.wpm_label.grid(column=2, row=0, pady=(20, 0))
 
         self.wpm_text = tk.Text(width=5, height=1)
-        self.wpm_text.insert('1.0', '?')
-        self.wpm_text.configure(state='disabled')
+        self.update_wpm('?')
         self.wpm_text.grid(column=3, row=0, pady=(20, 0))
 
         self.tl_label = tk.Label(text='Time left: ')
         self.tl_label.grid(column=4, row=0, pady=(20, 0))
 
         self.tl_text = tk.Text(width=5, height=1)
-        self.tl_text.insert('1.0', str(self.count))
-        self.tl_text.configure(state='disabled')
+        self.update_tl_text(str(self.count))
         self.tl_text.grid(column=5, row=0, pady=(20, 0))
 
         self.restart_button = tk.Button(
@@ -69,11 +67,8 @@ class TyingSpeedTest:
 
     def count_down(self):
         if self.count > -1:
-            self.tl_text.configure(state='normal')
-            self.tl_text.delete('1.0', tk.END)
-            self.tl_text.insert('1.0', str(self.count))
-            self.tl_text.configure(state='disabled')
-            self.master.after(1000, self.count_down)
+            self.update_tl_text(str(self.count))
+            self.timer = self.master.after(1000, self.count_down)
             self.count -= 1
         else:
             messagebox.showinfo(
@@ -81,17 +76,24 @@ class TyingSpeedTest:
 
     def cal_speed(self):
         user_input = self.entry.get().strip().lower()
-        words_outer = self.test_text.split(' ')[
+        words_outer = self.words.split(' ')[
             self.word_index].strip().lower()
         if user_input == words_outer:
             self.right_number += 1
 
-    def update_wpm(self):
+    def update_wpm(self, text):
+        """update wpm text"""
         self.wpm_text.configure(state='normal')
         self.wpm_text.delete('1.0', 'end')
-        self.wpm_text.insert('1.0', str(self.right_number))
+        self.wpm_text.insert('1.0', str(text))
         self.wpm_text.configure(state='disabled')
-        self.wpm_text.grid(column=3, row=0, pady=(20, 0))
+
+    def update_tl_text(self, number):
+        """update time left text"""
+        self.tl_text.configure(state='normal')
+        self.tl_text.delete('1.0', 'end')
+        self.tl_text.insert('1.0', str(number))
+        self.tl_text.configure(state='disabled')
 
     def add_foreground(self, start, end):
         self.text.tag_add('fore', start, end)
@@ -107,19 +109,19 @@ class TyingSpeedTest:
 
     def update_text(self):
         self.word_index = 0
-        self.test_text = self.get_text()
+        self.words = self.get_text()
         self.text.configure(state='normal')
         self.text.delete('1.0', 'end')
-        self.text.insert('1.0', self.test_text)
+        self.text.insert('1.0', self.words)
         self.text.configure(state='disabled')
 
     def update_bg(self):
         """update background"""
-        if self.word_index >= len(self.test_text.split(' ')):
+        if self.word_index >= len(self.words.split(' ')):
             self.update_text()
             # reset last pos of background and foreground
             self.bg_pos, self.fg_pos = '1.0', '1.0'
-        word = self.test_text.split(' ')[
+        word = self.words.split(' ')[
             self.word_index]  # the word user is typing
         count_var = tk.StringVar()
         self.remove_background('1.0', 'end')
@@ -134,8 +136,8 @@ class TyingSpeedTest:
     def update_fg(self):
         """update foreground"""
         user_input = self.entry.get().strip().lower()
-        if self.test_text.split(' ')[self.word_index - 1] == user_input:
-            word = self.test_text.split(' ')[
+        if self.words.split(' ')[self.word_index - 1] == user_input:
+            word = self.words.split(' ')[
                 self.word_index - 1]
             count_var = tk.StringVar()
             pos = self.text.search(
@@ -166,13 +168,24 @@ class TyingSpeedTest:
         self.update_bg()
         self.update_fg()
         self.reset_entry()
-        self.update_wpm()
+        self.update_wpm(self.right_number)
 
     def update_index(self):
         self.word_index += 1
 
     def restart(self):
-        pass
+        """ reset variables """
+        self.master.after_cancel(self.timer)  # cancel counting down event
+        self.count = 60
+        self.status = 0
+        self.right_number = 0
+        self.bg_pos, self.fg_pos = '1.0', '1.0'
+        self.update_text()
+        self.al_bind()
+        self.update_bg()
+        self.update_wpm('?')
+        self.update_tl_text(self.count)
+        self.reset_entry()
 
 
 root = tk.Tk()
