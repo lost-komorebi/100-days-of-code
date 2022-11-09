@@ -18,6 +18,8 @@ class TyingSpeedTest:
         self.status = 0  # default status 0 ongoing 1 end
         self.word_index = 0  # mark the word that user is typing
         self.right_number = 0  # the correct number of user typing
+        # record last post of background and foreground
+        self.bg_pos, self.fg_pos = '1.0', '1.0'
 
         self.test_text = self.get_text()
 
@@ -70,8 +72,8 @@ class TyingSpeedTest:
 
     def get_text(self):
         with open('word_list.txt', 'r') as f:
-            word_list = list(f.read().split('•'))
-        return ' '.join(sample(word_list, k=20))
+            word_list = f.read().split('•')
+        return ' '.join(sample(word_list, 20))
 
     def count_down(self):
         if self.count > -1:
@@ -91,7 +93,6 @@ class TyingSpeedTest:
             self.word_index].strip().lower()
         if user_input == words_outer:
             self.right_number += 1
-        #print(user_input, words_outer, self.right_number)
 
     def add_foreground(self, start, end):
         self.text.tag_add('fore', start, end)
@@ -117,16 +118,19 @@ class TyingSpeedTest:
         """update background"""
         if self.word_index >= len(self.test_text.split(' ')):
             self.update_text()
+            # reset last pos of background and foreground
+            self.bg_pos, self.fg_pos = '1.0', '1.0'
         word = self.test_text.split(' ')[
             self.word_index]  # the word user is typing
         count_var = tk.StringVar()
         self.remove_background('1.0', 'end')
         pos = self.text.search(
             word,
-            '1.0',
+            self.bg_pos,
             stopindex='end',
             count=count_var)
         self.add_background(pos, f"{pos} + {count_var.get()}c")
+        self.bg_pos = f"{pos} + {count_var.get()}c"
 
     def update_fg(self):
         """update foreground"""
@@ -137,10 +141,11 @@ class TyingSpeedTest:
             count_var = tk.StringVar()
             pos = self.text.search(
                 word,
-                '1.0',
+                self.fg_pos,
                 stopindex='end',
                 count=count_var)
             self.add_foreground(pos, f"{pos} + {count_var.get()}c")
+            self.fg_pos = f"{pos} + {count_var.get()}c"
 
     def reset_entry(self):
         self.entry.delete(0, 'end')
