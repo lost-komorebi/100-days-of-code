@@ -24,7 +24,6 @@ class BrickManager(Turtle):
             for _ in range(1000 // 65):
                 brick = Turtle('square')
                 brick.shapesize(stretch_wid=1, stretch_len=3)
-
                 brick.color(choice(COLORS))
                 brick.penup()
                 brick.width = 60
@@ -33,3 +32,6 @@ class BrickManager(Turtle):
                 x += 65
                 self.bricks.append(brick)
                 self.bricks_number += 1
+
+    def reset(self):
+        self.create_brick()

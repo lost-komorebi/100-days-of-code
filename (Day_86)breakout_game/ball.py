@@ -13,9 +13,8 @@ class Ball(Turtle):
         self.shape('circle')
         self.color('red')
         self.penup()
-        self.x_pace = 10
-        self.y_pace = 10
-        self.goto(0, -279)
+        self.x_pace = 5
+        self.y_pace = 5
         self.width = 20
         self.height = 20
 
@@ -45,3 +44,8 @@ class Ball(Turtle):
                 self.height + self.ycor() > other.ycor():
             return True
         return False
+
+    def reset(self):
+        self.x_pace = 5
+        self.y_pace = 5
+        self.goto(0, 0)
