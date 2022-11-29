@@ -1,0 +1,71 @@
+{% include 'header.html' %}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">LIKE COWORKING, <br>
+BUT BETTER</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">From coffee shops to hotel lobbies, discover everyday places to work and connect.</p>
+                </div>
+            </div>
+        </header>
+        <!-- Section-->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    {% for cafe in cafes %}
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img width="268" height="178.66" class="card-img-top" src="{{ cafe.img_url }}" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{cafe.name}}</h5>
+                                    <!-- Product price-->
+                                    <div>
+                                    {{cafe.coffee_price}}
+                                        </div>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                    {% if cafe.has_sockets == 1%}
+                                        <span><i class="fa-solid fa-plug"> &nbsp;&nbsp;</i></span>
+                                    {% endif %}
+                                    {% if cafe.has_wifi == 1%}
+                                    <span><i class="fa-solid fa-wifi"> &nbsp;&nbsp;</i></span>
+                                    {% endif %}
+                                    {% if cafe.has_toilet == 1%}
+                                    <span><i class="fa-solid fa-toilet"> &nbsp;&nbsp;</i></span>
+                                    {% endif %}
+                                    {% if cafe.can_take_calls == 1%}
+                                    <span><i class="fa-solid fa-phone"> &nbsp;&nbsp;</i></span>
+                                    {% endif %}
+                                        </div>
+                                    <div>
+                                        <i class="fa-solid fa-chair"></i>&nbsp;   {{cafe.seats}} &nbsp;
+                                     </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a href="{{ cafe.map_url }}"><i class="fa-solid fa-location-dot"></i>&nbsp;{{cafe.location}}</a>
+                                    <div>
+                                    <a href="{{ url_for('cafe.delete', id=cafe.id) }}"><i class="fa-regular fa-delete-right"></i>DELETE</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </section>
+{% include 'footer.html' %}
