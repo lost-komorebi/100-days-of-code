@@ -23,4 +23,4 @@ class CafeForm(FlaskForm):
         label='COFFEE_PRICE(£)',
         validators=[
             DataRequired()])
-    btn = SubmitField(label='ADD', render_kw={'type': 'button', 'class': 'btn btn-primary'})
+    btn = SubmitField(label='ADD')
