@@ -1,0 +1,17 @@
+
+{% import 'bootstrap/wtf.html' as wtf%}
+{% include 'header.html' %}
+{% block body %}
+<div class="container">
+    <br>
+    <h1>Add new Place</h1>
+    <br>
+    <p>Let freelancers, digital nomads, and other remote workers know about a new work-friendly venue!</p>
+  <br>
+
+    {{wtf.quick_form(form)}}
+</div>
+
+{% endblock %}
+
+{% include 'footer.html' %}
