@@ -1,15 +1,25 @@
-
 {% import 'bootstrap/wtf.html' as wtf%}
 {% include 'header.html' %}
 {% block body %}
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
 <div class="container">
     <br>
     <h1>Add new Place</h1>
     <br>
     <p>Let freelancers, digital nomads, and other remote workers know about a new work-friendly venue!</p>
   <br>
-
-    {{wtf.quick_form(form)}}
+    {% with messages = get_flashed_messages() %}
+{% if messages %}
+    {% for message in messages %}
+    <span style="color:red">{{ message }}</span>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {{wtf.quick_form(form, novalidate=True)}}
 </div>
 
 {% endblock %}

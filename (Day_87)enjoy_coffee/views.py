@@ -26,32 +26,29 @@ def index():
 @cafe_bp.route('/add-cafe', methods=['GET', 'POST'])
 def add_cafe():
     cafe_form = CafeForm()
-    if request.method == 'POST':
+    if cafe_form.validate_on_submit():
         if get_cafe_by_name(cafe_form.name.data):
-            error = 'Invalid Cafe Name'
-            flash(error)
-            print(error)
+            flash('Invalid Cafe Name')
         else:
-            if cafe_form.validate_on_submit():
-                cafe = Cafe(
-                    name=cafe_form.name.data,
-                    map_url=cafe_form.map_url.data,
-                    img_url=cafe_form.img_url.data,
-                    location=cafe_form.location.data,
-                    has_sockets=cafe_form.has_sockets.data,
-                    has_toilet=cafe_form.has_toilet.data,
-                    has_wifi=cafe_form.has_wifi.data,
-                    can_take_calls=cafe_form.can_take_calls.data,
-                    seats=cafe_form.seats.data,
-                    coffee_price=cafe_form.coffee_price.data
-                )
-                try:
-                    db.session.add(cafe)
-                    db.session.commit()
-                except Exception:
-                    db.session.rollback()
-                    raise
-                return redirect(url_for('cafe.index'))
+            cafe = Cafe(
+                name=cafe_form.name.data,
+                map_url=cafe_form.map_url.data,
+                img_url=cafe_form.img_url.data,
+                location=cafe_form.location.data,
+                has_sockets=cafe_form.has_sockets.data,
+                has_toilet=cafe_form.has_toilet.data,
+                has_wifi=cafe_form.has_wifi.data,
+                can_take_calls=cafe_form.can_take_calls.data,
+                seats=cafe_form.seats.data,
+                coffee_price=cafe_form.coffee_price.data
+            )
+            try:
+                db.session.add(cafe)
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+                raise
+            return redirect(url_for('cafe.index'))
     return render_template('add-cafe.html', form=cafe_form)
 
 
