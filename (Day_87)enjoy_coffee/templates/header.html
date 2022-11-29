@@ -26,8 +26,9 @@
 
                     </ul>
                     <form class="d-flex">
+                        {% if '/add-cafe' not in  request.path  %}
                         <a class="btn btn-primary" href="{{ url_for('cafe.add_cafe') }}" role="button"><i class="fa-solid fa-plus"></i> ADD CAFE</a>
-
+                        {% endif %}
                     </form>
                 </div>
             </div>
