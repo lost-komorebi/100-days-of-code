@@ -1,0 +1,23 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block body %}
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+<div class="container d-flex justify-content-center" >
+  <h1>Converted successfully!</h1>
+<div>
+        <audio controls>
+ <source src="{{ url_for('text_to_speech.download_file', name=filename)}}">
+</audio>
+
+    </div>
+    <div>
+        <a href="{{ url_for('text_to_speech.download_file', name=filename)}}" type="button" class="btn btn-primary btn-lg">Download</a>
+    </div>
+</div>
+
+
+{% endblock %}

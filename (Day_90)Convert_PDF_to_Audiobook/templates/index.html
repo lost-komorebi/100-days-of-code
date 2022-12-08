@@ -1,0 +1,25 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block body %}
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+<div class="container" >
+  <div><h1 >Convert your pdf to Audio!</h1></div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<p style="color:red">{{ message }}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{{ wtf.quick_form(form, novalidate=True, button_map={'btn': 'btn btn-primary btn-lg'}, extra_classes={'class':'d-flex justify-content-center'}) }}
+
+</div>
+
+
+{% endblock %}
