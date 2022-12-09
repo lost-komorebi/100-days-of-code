@@ -8,7 +8,7 @@ from flask import (
     redirect,
     url_for,
     render_template,
-    flash, send_from_directory)
+    flash, send_from_directory, request)
 import os
 from werkzeug.utils import secure_filename
 from forms import PdfForm
@@ -36,13 +36,14 @@ def index():
         filename = secure_filename(f.filename)
         if allowed_file(filename):
             f.save(os.path.join(UPLOAD_FOLDER, filename))
-            convert(filename)
+            output_filename = convert(filename)
+            return redirect(url_for('text_to_speech.finish', filename=output_filename))
         else:
             flash('Not support file type')
     return render_template('index.html', form=form)
 
 
-@tts_bp.route('/convert/<filename>', methods=['GET', 'POST'])
+@tts_bp.route('/<filename>')
 def convert(filename):
     """ convert text to speech """
     output_filename = filename.split('.')[0] + '.mp3'
@@ -54,15 +55,14 @@ def convert(filename):
     try:
         # call google cloud api to convert text to speech
         tts(text, output_path)
-        return redirect(url_for('text_to_speech.finish'))
+        return output_filename
     except Exception as e:
-        print(e)
         flash('System error! Please try again!')
 
 
-@tts_bp.route('/finish')
-def finish():
-    return render_template('finish.html')
+@tts_bp.route('/finish/<filename>')
+def finish(filename):
+    return render_template('finish.html', filename=filename)
 
 
 @tts_bp.route('/upload/<name>')
