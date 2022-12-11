@@ -10,6 +10,10 @@ from wtforms.validators import InputRequired
 
 class ImgForm(FlaskForm):
 
-    img = FileField(label='Please upload picture.', validators=[
-                    InputRequired(message='Please upload picture!')])
-    btn = SubmitField('UPLOAD')
+    img = FileField(
+        label='Upload Image',
+        validators=[
+            InputRequired(
+                message='Please upload picture!')],
+        render_kw={
+            'class': 'btn_upload'})
