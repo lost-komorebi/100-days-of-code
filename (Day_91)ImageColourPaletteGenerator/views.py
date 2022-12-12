@@ -15,6 +15,7 @@ import os
 import numpy as np
 from PIL import Image
 import pandas as pd
+import shutil
 
 SUPPORT_EXTENSIONS = ['jpg', 'png', 'jpeg']
 UPLOAD_FILE = 'UPLOAD'
@@ -65,6 +66,9 @@ def index():
     else:
         default_file = 'demo.jpg'  # add default demo
         default_path = 'static'
+        # copy demo.jpg from static for upload, otherwise the default picture
+        # cannot display
+        shutil.copy(os.path.join(default_path, default_file), UPLOAD_FILE)
         colors = color_extract(os.path.join(default_path, default_file))
         return render_template(
             'index.html',
@@ -82,7 +86,7 @@ def color_extract(file, num=10):
     top_list = []
     for i in (pd.DataFrame(img_array_list).value_counts(
             normalize=True).head(num).iteritems()):
-        top_list.append([rbg_to_hex(i[0]), i[1]*100])
+        top_list.append([rbg_to_hex(i[0]), i[1] * 100])
     return top_list
 
 
