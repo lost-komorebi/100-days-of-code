@@ -4,7 +4,7 @@
 __author__ = 'komorebi'
 
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField
+from wtforms import FileField
 from wtforms.validators import InputRequired
 
 
@@ -16,4 +16,4 @@ class ImgForm(FlaskForm):
             InputRequired(
                 message='Please upload picture!')],
         render_kw={
-            'class': 'btn_upload'})
+            'class': 'btn_upload', 'onchange': 'form.submit()'})
