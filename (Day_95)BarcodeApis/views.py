@@ -136,16 +136,17 @@ def get_product_info(
         response = barcode.return_info_by_barcode(value)
     except Exception:
         return jsonify({'error': 'System error, Please try again.'})
+    return json.dumps(response.__dict__)  # convert custom class to json
+
+
+@barcode_bp.route('/scan-barcode', methods={'POST'})
+@ValidateParameters()
+def scan_barcode(
+    image_path: str = Json()
+):
+    """ Scan and recognize an image of a barcode """
+    try:
+        response = barcode.scan_barcode(image_path)
+    except Exception:
+        return jsonify({'error': 'System error, Please try again.'})
     return json.dumps(response.__dict__)
-
-
-# @barcode_bp.route('/scan-barcode', methods={'POST'})
-# @ValidateParameters()
-# def scan_barcode(
-#     image: str: Json(func=)
-# ):
-#     """ Scan and recognize an image of a barcode """
-#     try:
-#         response = barcode.scan_barcode(image)
-#     except Exception:
-#         return jsonify({'error': 'System error, Please try again.'})
