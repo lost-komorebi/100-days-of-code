@@ -47,11 +47,12 @@ def ean_13(
         max_int=3)):
     """Generate a EAN-13 code barcode as PNG file"""
     try:
-        response = barcode.generate_ean13(str(value))
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    response = eval(response)  # convert bytes-like string to bytes
-    return return_result(response, response_type)
+        response = barcode.generate_ean13(value)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        response = eval(response)  # convert bytes-like string to bytes
+        return return_result(response, response_type)
 
 
 @barcode_bp.route('/ean8', methods={'POST'})
@@ -67,10 +68,11 @@ def ean_8(
     """Generate a EAN-8 code barcode as PNG file"""
     try:
         response = barcode.generate_ean8(value)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    response = eval(response)  # convert bytes-like string to bytes
-    return return_result(response, response_type)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        response = eval(response)  # convert bytes-like string to bytes
+        return return_result(response, response_type)
 
 
 @barcode_bp.route('/qrcode', methods={'POST'})
@@ -84,10 +86,11 @@ def qrcode(
     """ Generate a QR code barcode as PNG file """
     try:
         response = barcode.generate_qrcode(value)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    response = eval(response)  # convert bytes-like string to bytes
-    return return_result(response, response_type)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        response = eval(response)  # convert bytes-like string to bytes
+        return return_result(response, response_type)
 
 
 @barcode_bp.route('/upca', methods={'POST'})
@@ -102,10 +105,11 @@ def upca(
     """ Generate a UPC-A code barcode as PNG file """
     try:
         response = barcode.generate_upca(value)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    response = eval(response)  # convert bytes-like string to bytes
-    return return_result(response, response_type)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        response = eval(response)  # convert bytes-like string to bytes
+        return return_result(response, response_type)
 
 
 @barcode_bp.route('/upce', methods={'POST'})
@@ -121,10 +125,11 @@ def upce(
     """ Generate a UPC-E code barcode as PNG file """
     try:
         response = barcode.generate_upce(value)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    response = eval(response)  # convert bytes-like string to bytes
-    return return_result(response, response_type)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        response = eval(response)  # convert bytes-like string to bytes
+        return return_result(response, response_type)
 
 
 @barcode_bp.route('/product-info', methods={'POST'})
@@ -134,9 +139,10 @@ def get_product_info(
     """ Lookup EAN barcode value, return product data """
     try:
         response = barcode.return_info_by_barcode(value)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    return json.dumps(response.__dict__)  # convert custom class to json
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        return json.dumps(response.__dict__)  # convert custom class to json
 
 
 @barcode_bp.route('/scan-barcode', methods={'POST'})
@@ -147,6 +153,7 @@ def scan_barcode(
     """ Scan and recognize an image of a barcode """
     try:
         response = barcode.scan_barcode(image_path)
-    except Exception:
-        return jsonify({'error': 'System error, Please try again.'})
-    return json.dumps(response.__dict__)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    else:
+        return json.dumps(response.__dict__)

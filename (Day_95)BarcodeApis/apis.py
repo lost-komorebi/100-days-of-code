@@ -27,7 +27,7 @@ class Barcode:
             api_response = api_instance.generate_barcode_ean13(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling GenerateBarcodeApi->generate_barcode_ean13: %s\n" %
                 e)
 
@@ -40,7 +40,7 @@ class Barcode:
             api_response = api_instance.generate_barcode_ean8(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling GenerateBarcodeApi->generate_barcode_ean8: %s\n" %
                 e)
 
@@ -53,7 +53,7 @@ class Barcode:
             api_response = api_instance.generate_barcode_qr_code(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling GenerateBarcodeApi->generate_barcode_qr_code: %s\n" %
                 e)
 
@@ -66,7 +66,7 @@ class Barcode:
             api_response = api_instance.generate_barcode_upca(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling GenerateBarcodeApi->generate_barcode_upca: %s\n" %
                 e)
 
@@ -79,7 +79,7 @@ class Barcode:
             api_response = api_instance.generate_barcode_upce(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling GenerateBarcodeApi->generate_barcode_upce: %s\n" %
                 e)
 
@@ -92,7 +92,7 @@ class Barcode:
             api_response = api_instance.barcode_lookup_ean_lookup(value)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling BarcodeLookupApi->barcode_lookup_ean_lookup: %s\n" %
                 e)
 
@@ -104,6 +104,6 @@ class Barcode:
             api_response = api_instance.barcode_scan_image(image_file)
             return api_response
         except ApiException as e:
-            print(
+            raise ApiException(
                 "Exception when calling BarcodeScanApi->barcode_scan_image: %s\n" %
                 e)
