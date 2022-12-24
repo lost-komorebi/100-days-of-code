@@ -1,0 +1,77 @@
+{% extends 'auth/base.html'%}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
+<div class="container m-5 p-2 rounded mx-auto bg-light shadow">
+<!-- App title section -->
+<div class="row m-1 p-4">
+   <div class="col">
+      <div class="p-1 h1 text-primary text-center mx-auto display-inline-block">
+         <i class="fa fa-check bg-primary text-white rounded p-2"></i>
+         <u>My Todo-s</u>
+      </div>
+   </div>
+</div>
+<!-- Create todo section -->
+<div class="row m-1 p-3">
+   <div class="col col-11 mx-auto">
+      <div class="row bg-white rounded shadow-sm p-2 add-todo-wrapper align-items-center justify-content-center">
+         {% with messages = get_flashed_messages() %}
+         {% if messages %}
+         {% for message in messages %}
+         {{ message }}
+         {% endfor %}
+         {% endif %}
+         {% endwith %}
+         {{wtf.quick_form(form, novalidate=True, button_map={'btn':'btn btn-primary btn-large'})}}
+      </div>
+   </div>
+</div>
+<div class="p-2 mx-4 border-black-25 border-bottom"></div>
+<!-- Todo list section -->
+<div class="row mx-1 px-5 pb-3 w-80" id="mainForm">
+   <div class="col mx-auto" id="mainList">
+      {% for tdl in lists %}
+      <div class="row px-3 align-items-center todo-item rounded">
+         <div class="col-auto m-1 p-0 d-flex align-items-center">
+            <h2 class="m-0 p-0" >
+               <div class="form-check">
+                  {% if tdl.status == 1 %}
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked onclick="window.location.href='{{url_for('to_do_list.finish', tdl_id=tdl.id)}}';">
+                  {% else %}
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="window.location.href='{{url_for('to_do_list.finish', tdl_id=tdl.id)}}';">
+                  {% endif %}
+               </div>
+            </h2>
+         </div>
+         <div class="col px-1 m-1 d-flex align-items-center">
+            <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" readonly value="{{ tdl.detail }}" title="{{ tdl.detail }}" />
+            <input type="text" class="form-control form-control-lg border-0 edit-todo-input rounded px-3 d-none" value="{{ tdl.detail }}" />
+         </div>
+         {% if tdl.due_date %}
+         <div class="col-auto m-1 p-0 px-3">
+            <div class="row">
+               <div class="col-auto d-flex align-items-center rounded bg-white border border-warning">
+                  <i class="fa fa-hourglass-2 my-2 px-2 text-warning btn" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Due on date"></i>
+                  <h6 class="text my-2 pr-2">{{tdl.due_date}}</h6>
+               </div>
+            </div>
+         </div>
+         {% endif %}
+         <div class="col-auto m-1 p-0 todo-actions">
+            <div class="row d-flex align-items-center justify-content-end">
+               <h5 class="m-0 p-0 px-2">
+                  <i class="fa fa-trash-o text-danger btn m-0 p-0" data-toggle="tooltip" data-placement="bottom" title="Delete todo" onclick="window.location.href='{{url_for('to_do_list.delete', tdl_id=tdl.id)}}';"></i>
+               </h5>
+            </div>
+            <div class="row todo-created-info">
+               <div class="col-auto d-flex align-items-center pr-2">
+                  <i class="fa fa-info-circle my-2 px-2 text-black-50 btn" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Created date"></i>
+                  <label class="date-label my-2 text-black-50">{{tdl.create_time}}</label>
+               </div>
+            </div>
+         </div>
+      </div>
+      {% endfor %}
+   </div>
+</div>
+{% endblock %}
